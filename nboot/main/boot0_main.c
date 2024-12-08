@@ -20,6 +20,21 @@
 
 static int boot0_clear_env(void);
 
+// JDZ: test to confirm this boot program is the one that is running
+// will blink ACT led and count on uart 20 seconds before enter xfel
+static void blink(int nseconds) {
+	// config PD18 as output
+	unsigned *cfg = (void *)0x02000098; // PD cfg 2
+	*cfg = (*cfg & ~0xf00) | 0x100;
+	unsigned *data = (void *)0x020000a0; // PD data
+	char *uart = (void *)0x02500000; // uart base
+	for (int i = 0; i < nseconds; i++) {
+		*data ^= (1 << 18);  // toggle blue ACT led
+		*uart = '0' + (i%10); // count
+		udelay(1000*1000);
+	}
+}
+
 void main(void)
 {
 	int dram_size;
@@ -28,6 +43,7 @@ void main(void)
 				rtos_base = 0, opensbi_base = 0, dtb_base = 0;
 
 	sunxi_serial_init(BT0_head.prvt_head.uart_port, (void *)BT0_head.prvt_head.uart_ctrl, 6);
+	blink(20);
 	printf("HELLO! BOOT0 is starting!\n");
 	printf("BOOT0 commit : %s\n", BT0_head.hash);
 	sunxi_set_printf_debug_mode(BT0_head.prvt_head.debug_mode);

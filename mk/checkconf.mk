@@ -11,6 +11,8 @@
 #
 # path/to/crypto_config.h: FORCE
 #	$(call check-conf-h,CFG_CRYPTO_ CRYPTO_)
+
+# JDZ: echo -n not understood by macOS echo built-in, replace with printf
 define check-conf-h
 	$(Q)set -e;						\
 	$(CMD_ECHO_SILENT) '  CHK     $@';			\
@@ -22,7 +24,7 @@ define check-conf-h
 	echo "#ifndef $${guard}" >$@.tmp;			\
 	echo "#define $${guard}" >>$@.tmp;			\
 	echo  "#include<$(PLATFORM).h>" >>$@.tmp;	\
-	echo -n "$${cnf}" | sed 's/_nl_ */\n/g' >>$@.tmp;	\
+	printf "$${cnf}" | sed 's/_nl_ */\n/g' >>$@.tmp;	\
 	echo "#endif" >>$@.tmp;					\
 	$(call mv-if-changed,$@.tmp,$@)
 endef
@@ -37,7 +39,7 @@ define check-conf-mk
 	echo "# auto-generated AW SPL configuration file" >$@.tmp; \
 	echo "ARCH=${ARCH}" >>$@.tmp;				\
 	echo "PLATFORM=${PLATFORM}" >>$@.tmp;			\
-	echo -n "$${cnf}" | sed 's/_nl_ */\n/g' >>$@.tmp;	\
+	printf "$${cnf}" | sed 's/_nl_ */\n/g' >>$@.tmp;	\
 	$(call mv-if-changed,$@.tmp,$@)
 endef
 

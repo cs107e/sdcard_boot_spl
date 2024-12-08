@@ -7,7 +7,8 @@ CPU=riscv64
 PLATFORM = sun20iw1p1
 CONFIG_ARCH_RV64I=y
 CFG_SUNXI_GPIO_V2=y
-CFG_USE_DCACHE=y
+# JDZ 7/2024 changed from y to n, we do not want to enable dcache on boot
+CFG_USE_DCACHE=n
 CFG_USE_MAEE=y
 
 CFG_BOOT0_RUN_ADDR=0x20000
