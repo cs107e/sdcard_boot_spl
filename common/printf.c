@@ -387,7 +387,7 @@ int printf(const char *fmt, ...)
 #endif
 
 	/* print time stamp as prefix*/
-	sprintf(time_stamp, "[%d]", get_sys_ticks());
+	sprintf(time_stamp, "[%d] ", get_sys_ticks());
 	for (i = 0; i < sizeof(time_stamp); i++) {
 		if (time_stamp[i] == 0)
 			break;

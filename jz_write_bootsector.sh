@@ -12,9 +12,9 @@ if [ $BSIZE -gt 65535 ]; then   # required to be < 64K
     exit 1
 fi
 
-echo "Avaiable external disks:"
+echo "Available external disks:"
 diskutil list external
-echo "Review to find the one you intend (should be FAT32 format."
+echo "Review above list to find the one you intend (should be FAT32)"
 read -p "Enter disk dev path: " SDCARD
 diskutil unmountDisk $SDCARD  # need to unmount before dd
 echo "note: sudo-dd may require password"

@@ -12,7 +12,7 @@ MAIN   += simulate_main.o
 else
 MAIN   += boot0_main.o
 endif
-COBJS   += load_image.o
+COBJS   += load_image.o diskio.o pff.o
 
 SRCS	:= $(MAIN:.o=.c) $(COBJS:.o=.c) $(HEAD:.o=.c)
 OBJS	:= $(addprefix $(obj),$(COBJS) $(COBJS-y) $(SOBJS))
