@@ -15,30 +15,29 @@ int load_image_from_sdcard_fat(const char *filename, uintptr_t start_addr);
 
 static int boot0_clear_env(void);
 
-// JDZ: test to confirm this boot program is the one that is running
-// will blink ACT led and count on uart 20 seconds before enter xfel
-static void blink(int nseconds) {
-	// config PD18 as output
+// JDZ: used to confirm this boot program is the one that is running
+// blink ACT led and count on uart for a while before start boot sequence
+void blink(int nseconds) {
 	unsigned *cfg = (void *)0x02000098; // PD cfg 2
-	*cfg = (*cfg & ~0xf00) | 0x100;
+	*cfg = (*cfg & ~0xf00) | 0x100;	 // config PD18 as output
 	unsigned *data = (void *)0x020000a0; // PD data
 	char *uart = (void *)0x02500000; // uart base
 	for (int i = 0; i < nseconds; i++) {
-		*data ^= (1 << 18);  // toggle blue ACT led
-		*uart = '0' + (i%10); // count
-		mdelay(1000/2);
+		*uart = '0' + (i%10); // output digit
+		*data ^= (1 << 18);  // toggle PD18 (blue ACT led)
+		mdelay(1000);
 	}
 }
 
 void main(void)
 {
 	sunxi_serial_init(BT0_head.prvt_head.uart_port, (void *)BT0_head.prvt_head.uart_ctrl, 6);
-	mdelay(5*1000); // time for terminal to wake
-	blink(10);
+	mdelay(5*1000); // pause for terminal to catch up
+	// blink(10);
 
 	printf("HELLO! BOOT0 is starting!\n");
 	printf("BOOT0 commit : %s\n", BT0_head.hash);
-	printf("CS107E modified boot0 for Mango Pi, reads mango.bin from sdcard FAT32\n");
+	printf("This is boot0 modified for CS107E Mango Pi (load mango.bin image from sdcard FAT32)\n");
 
 	sunxi_set_printf_debug_mode(BT0_head.prvt_head.debug_mode);
 
@@ -60,7 +59,7 @@ void main(void)
 	uintptr_t start_addr = 0x40000000;
 	int error = load_image_from_sdcard_fat(kernel_file, start_addr);
 	if (error == 0) {
-		printf("read file '%s' from SD card, load address @0x%x, exec\n", kernel_file, start_addr);
+		printf("read file '%s' from SD card, load address @0x%x and exec...\n", kernel_file, start_addr);
 		boot0_jmp(start_addr); // does not return
 	} else {
 		printf("unable to read file '%s' from SD card (error code %d), exiting to FEL\n", kernel_file, error);
