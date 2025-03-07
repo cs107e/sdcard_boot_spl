@@ -1,17 +1,7 @@
-NOTE: This project is obsolete now that U-Boot SPL is working.
+MacOS ONLY
 
-https://github.com/smaeul/u-boot/releases/tag/d1-2022-10-31
+1.build mmc (there should already be a compiled binary so you can skip this step)
+make CROSS_COMPILE=riscv64-unknown-elf- p=sun20iw1p1 mmc
 
-You can use any riscv64 ELF/GNU/musl toolchain.
+2.use jz-write-sector.sh to write the mmc image to the SD card
 
-1.build mmc
-make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 mmc
-
-2.build nand
-make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 nand
-
-3.build spinor
-make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 spinor
-
-4.build fes
-make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 fes
