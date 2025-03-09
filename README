@@ -1,7 +1,0 @@
-MacOS ONLY
-
-1.build mmc (there should already be a compiled binary so you can skip this step)
-make CROSS_COMPILE=riscv64-unknown-elf- p=sun20iw1p1 mmc
-
-2.use jz-write-sector.sh to write the mmc image to the SD card
-
