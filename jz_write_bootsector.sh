@@ -10,7 +10,7 @@ confirm_or_exit() {
             return 0  # User confirmed
             ;;
         *)
-            return 1  # User did not confirm
+            exit 1  # User did not confirm
             ;;
     esac
 }
